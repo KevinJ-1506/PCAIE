@@ -1,0 +1,179 @@
+# Created by Octave 9.2.0, Fri Dec 06 22:52:51 2024 GMT <unknown@DESKTOP-K1LF304>
+# name: N
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 3
+# name: data
+# type: cell
+# rows: 3
+# columns: 2
+# name: <cell-element>
+# type: sq_string
+# elements: 1
+# length: 15
+Kevin Hernandez
+
+
+# name: <cell-element>
+# type: sq_string
+# elements: 1
+# length: 13
+Carlos Medina
+
+
+# name: <cell-element>
+# type: sq_string
+# elements: 1
+# length: 6
+Carlos
+
+
+
+# name: <cell-element>
+# type: int32 scalar
+201904037
+
+
+# name: <cell-element>
+# type: int32 scalar
+202100144
+
+
+# name: <cell-element>
+# type: int32 scalar
+201400524
+
+
+
+
+
+# name: columns
+# type: cell
+# rows: 1
+# columns: 2
+# name: <cell-element>
+# type: sq_string
+# elements: 1
+# length: 6
+nombre
+
+
+
+# name: <cell-element>
+# type: sq_string
+# elements: 1
+# length: 6
+carnet
+
+
+
+
+
+# name: types
+# type: struct
+# ndims: 2
+ 1 2
+# length: 5
+# name: name
+# type: cell
+# rows: 1
+# columns: 2
+# name: <cell-element>
+# type: sq_string
+# elements: 1
+# length: 18
+pg_catalog.varchar
+
+
+
+# name: <cell-element>
+# type: sq_string
+# elements: 1
+# length: 15
+pg_catalog.int4
+
+
+
+
+
+# name: is_array
+# type: cell
+# rows: 1
+# columns: 2
+# name: <cell-element>
+# type: bool
+0
+
+
+
+# name: <cell-element>
+# type: bool
+0
+
+
+
+
+
+# name: is_composite
+# type: cell
+# rows: 1
+# columns: 2
+# name: <cell-element>
+# type: bool
+0
+
+
+
+# name: <cell-element>
+# type: bool
+0
+
+
+
+
+
+# name: is_enum
+# type: cell
+# rows: 1
+# columns: 2
+# name: <cell-element>
+# type: bool
+0
+
+
+
+# name: <cell-element>
+# type: bool
+0
+
+
+
+
+
+# name: elements
+# type: cell
+# rows: 1
+# columns: 2
+# name: <cell-element>
+# type: matrix
+# rows: 0
+# columns: 0
+
+
+
+# name: <cell-element>
+# type: matrix
+# rows: 0
+# columns: 0
+
+
+
+
+
+
+
+
+
+# name: conn
+# type: PGconn
