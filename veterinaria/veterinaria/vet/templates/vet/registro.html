@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen relative">
+
+  <!-- Botón para volver al login -->
+  <a href="{% url 'login' %}" class="absolute top-6 left-6 text-indigo-600 hover:text-indigo-800 font-medium">
+    ← Volver al login
+  </a>
+
+  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-3xl">
+    <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Registro de Usuario</h2>
+
+    <form method="POST" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- ERRORES -->
+      {% if form.errors %}
+        <div class="bg-red-100 border border-red-400 text-red-700 p-4 rounded">
+          <ul class="text-sm list-disc list-inside">
+            {% for field in form %}
+              {% for error in field.errors %}
+                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <!-- DATOS DEL USUARIO -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Nombre</label>
+          {{ form.nombre }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Apellido</label>
+          {{ form.apellido }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">DPI</label>
+          {{ form.dpi }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Teléfono</label>
+          {{ form.telefono }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Usuario</label>
+          {{ form.username }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Correo</label>
+          {{ form.email }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Contraseña</label>
+          {{ form.password }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Confirmar Contraseña</label>
+          {{ form.password2 }}
+        </div>
+      </div>
+
+      <hr class="my-6 border-t">
+
+      <!-- DATOS DE LA MASCOTA -->
+      <h2 class="text-xl font-bold text-gray-700">Datos de la Mascota</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Nombre</label>
+          {{ form.nombre_mascota }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">ID de chip</label>
+          {{ form.chip_id }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Especie</label>
+          {{ form.especie }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Raza</label>
+          {{ form.raza }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Sexo</label>
+          {{ form.sexo }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Edad (años)</label>
+          {{ form.edad }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Peso (kg)</label>
+          {{ form.peso }}
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-600">Historial médico</label>
+          {{ form.notas }}
+        </div>
+      </div>
+
+      <button type="submit"
+              class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition">
+        Registrarse
+      </button>
+    </form>
+
+    <div class="mt-6 text-center text-sm text-gray-600">
+      ¿Ya tienes cuenta?
+      <a href="{% url 'login' %}" class="text-indigo-600 hover:underline font-medium">Inicia Sesión</a>
+    </div>
+  </div>
+
+</body>
+</html>

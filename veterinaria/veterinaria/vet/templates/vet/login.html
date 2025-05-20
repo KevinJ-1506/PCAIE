@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Iniciar Sesión</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f0fff4;
+      font-family: 'Poppins', sans-serif;
+    }
+    .login-container {
+      max-width: 400px;
+      margin: 80px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .btn-success {
+      background-color: #38a169;
+      border: none;
+    }
+    .btn-success:hover {
+      background-color: #2f855a;
+    }
+  </style>
+</head>
+<body>
+<!-- Botón para volver al login -->
+  <a href="{% url 'principal' %}" class="absolute top-6 left-6 text-indigo-600 hover:text-indigo-800 font-medium">
+    ← Volver al principal
+  </a>
+
+<div class="login-container">
+  <h3 class="text-center mb-4">Iniciar Sesión</h3>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="username">Usuario</label>
+      <input type="text" class="form-control" name="username" required>
+    </div>
+    <div class="mb-3">
+      <label for="password">Contraseña</label>
+      <input type="password" class="form-control" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-success w-100">Ingresar</button>
+  </form>
+
+  <div class="text-center mt-3">
+    ¿No tienes cuenta?
+    <a href="{% url 'registro' %}">Regístrate</a>
+  </div>
+</div>
+
+</body>
+</html>

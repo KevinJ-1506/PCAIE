@@ -1,0 +1,205 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen relative">
+
+  <!-- Botón para volver al login -->
+  <a href="{% url 'login' %}" class="absolute top-6 left-6 text-indigo-600 hover:text-indigo-800 font-medium">
+    ← Volver al login
+  </a>
+
+  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-3xl">
+    <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Registro de Usuario</h2>
+
+    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- ERRORES -->
+      {% if form.errors %}
+        <div class="bg-red-100 border border-red-400 text-red-700 p-4 rounded">
+          <ul class="text-sm list-disc list-inside">
+            {% for field in form %}
+              {% for error in field.errors %}
+                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <!-- DATOS DEL USUARIO -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Nombre</label>
+          {{ form.nombre }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Apellido</label>
+          {{ form.apellido }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">DPI</label>
+          {{ form.dpi }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Teléfono</label>
+          {{ form.telefono }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Usuario</label>
+          {{ form.username }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Correo</label>
+          {{ form.email }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Contraseña</label>
+          {{ form.password }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Confirmar Contraseña</label>
+          {{ form.password2 }}
+        </div>
+      </div>
+
+      <!-- Imagen de rostro (opcional) con botón para abrir cámara -->
+      <div>
+        <label class="block text-sm font-medium text-gray-600">Imagen de rostro (opcional)</label>
+        <div class="flex items-center space-x-4">
+          {{ form.rostro }}
+          <button type="button" id="btnAbrirCamara" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            Tomar Foto
+          </button>
+        </div>
+      </div>
+
+      <!-- Contenedor de cámara, oculto inicialmente -->
+      <div id="camaraContainer" class="mt-4 hidden">
+        <video id="video" width="320" height="240" autoplay class="rounded border border-gray-300 my-2"></video>
+        <canvas id="canvas" width="320" height="240" class="hidden"></canvas>
+
+        <div class="flex space-x-4 mt-2">
+          <button type="button" onclick="capturarFoto()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            Capturar
+          </button>
+          <button type="button" onclick="cerrarCamara()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+            Cancelar
+          </button>
+        </div>
+
+        <!-- Campo oculto para guardar la imagen base64 -->
+        <input type="hidden" name="foto_capturada" id="foto_capturada">
+      </div>
+
+      <hr class="my-6 border-t">
+
+      <!-- DATOS DE LA MASCOTA -->
+      <h2 class="text-xl font-bold text-gray-700">Datos de la Mascota</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Nombre</label>
+          {{ form.nombre_mascota }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">ID de chip</label>
+          {{ form.chip_id }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Especie</label>
+          {{ form.especie }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Raza</label>
+          {{ form.raza }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Sexo</label>
+          {{ form.sexo }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Edad (años)</label>
+          {{ form.edad }}
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Peso (kg)</label>
+          {{ form.peso }}
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-600">Historial médico</label>
+          {{ form.notas }}
+        </div>
+      </div>
+
+      <button type="submit"
+              class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition">
+        Registrarse
+      </button>
+    </form>
+
+    <div class="mt-6 text-center text-sm text-gray-600">
+      ¿Ya tienes cuenta?
+      <a href="{% url 'login' %}" class="text-indigo-600 hover:underline font-medium">Inicia Sesión</a>
+    </div>
+  </div>
+
+<script>
+  const btnAbrirCamara = document.getElementById('btnAbrirCamara');
+  const camaraContainer = document.getElementById('camaraContainer');
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const fotoCapturada = document.getElementById('foto_capturada');
+
+  let stream = null;
+
+  btnAbrirCamara.addEventListener('click', () => {
+    if (camaraContainer.classList.contains('hidden')) {
+      abrirCamara();
+    } else {
+      cerrarCamara();
+    }
+  });
+
+  function abrirCamara() {
+    camaraContainer.classList.remove('hidden');
+    btnAbrirCamara.textContent = "Cerrar Cámara";
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(s => {
+        stream = s;
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        alert("Error accediendo a la cámara: " + err);
+      });
+  }
+
+  function cerrarCamara() {
+    camaraContainer.classList.add('hidden');
+    btnAbrirCamara.textContent = "Tomar Foto";
+    fotoCapturada.value = "";
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+  }
+
+  function capturarFoto() {
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imagenDataURL = canvas.toDataURL('image/png');
+    fotoCapturada.value = imagenDataURL;
+    alert("Foto capturada correctamente");
+    cerrarCamara();
+  }
+</script>
+
+</body>
+</html>

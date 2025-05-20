@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Agendar Cita</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f0fff4;
+      font-family: 'Poppins', sans-serif;
+    }
+    .form-container {
+      max-width: 800px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .form-title {
+      font-weight: 600;
+      margin-bottom: 25px;
+      color: #2f855a;
+      text-align: center;
+    }
+    .form-label {
+      font-weight: 500;
+      color: #2d3748;
+    }
+    .btn-success {
+      background-color: #38a169;
+      border: none;
+    }
+    .btn-success:hover {
+      background-color: #2f855a;
+    }
+    .table td, .table th {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-container">
+  <h2 class="form-title">Agendar Cita</h2>
+
+  <form method="post" id="citaForm">
+    {% csrf_token %}
+
+    <!-- Mascota -->
+    <div class="mb-3">
+      <label class="form-label">Mascota</label>
+      {{ form.mascota }}
+    </div>
+
+    <!-- Fecha y hora -->
+    <div class="mb-3">
+      <label class="form-label">Fecha y hora disponible</label>
+      {{ form.fecha_hora }}
+    </div>
+
+    <!-- Selección de servicios -->
+    <div class="mb-3 d-flex align-items-end gap-2">
+      <div style="flex:1;">
+        <label class="form-label">Servicio</label>
+        {{ form.servicio }}
+      </div>
+      <button type="button" class="btn btn-success" onclick="agregarServicio()">Agregar</button>
+    </div>
+
+    <!-- Servicios seleccionados -->
+    <table class="table table-bordered" id="tablaServicios" style="display:none;">
+      <thead>
+        <tr>
+          <th>Servicio</th>
+          <th>Precio</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <input type="hidden" name="servicios_seleccionados" id="serviciosSeleccionados">
+    <div class="mb-3 text-end">
+      <strong>Total: Q<span id="totalServicios">0.00</span></strong>
+    </div>
+
+    <hr>
+
+    <!-- Facturación -->
+    <div class="mb-3">
+      <label class="form-label">NIT</label>
+      {{ form.nit }}
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Dirección</label>
+      {{ form.direccion }}
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Forma de pago</label>
+      {{ form.forma_pago }}
+    </div>
+
+    <button type="submit" class="btn btn-success w-100">Confirmar Cita</button>
+  </form>
+</div>
+
+<!-- Script con servicios en JSON -->
+<script id="servicios-data" type="application/json">
+  {{ servicios_json|safe }}
+</script>
+
+<script>
+  const lista = JSON.parse(document.getElementById('servicios-data').textContent);
+  const tabla = document.getElementById('tablaServicios').getElementsByTagName('tbody')[0];
+  let total = 0;
+  let seleccionados = [];
+
+  function agregarServicio() {
+    const select = document.getElementById("id_servicio");
+    const selectedOption = select.options[select.selectedIndex];
+    const id = selectedOption.value;
+
+    if (!id || seleccionados.includes(id)) return;
+
+    const servicio = lista.find(s => s.pk == id);
+    const nombre = servicio.fields.servicio;
+    const precio = parseFloat(servicio.fields.precio);
+
+    // Agregar fila
+    const row = tabla.insertRow();
+    row.setAttribute("data-id", id);
+    row.innerHTML = `
+      <td>${nombre}</td>
+      <td>Q${precio.toFixed(2)}</td>
+      <td><button type="button" class="btn btn-sm btn-danger" onclick="eliminarServicio(this, ${precio}, '${id}')">Eliminar</button></td>
+    `;
+
+    // Actualizar total
+    total += precio;
+    seleccionados.push(id);
+    document.getElementById("totalServicios").textContent = total.toFixed(2);
+    document.getElementById("tablaServicios").style.display = '';
+
+    actualizarCampoOculto();
+  }
+
+  function eliminarServicio(btn, precio, id) {
+    const row = btn.closest("tr");
+    row.remove();
+    total -= precio;
+    seleccionados = seleccionados.filter(sid => sid !== id);
+    document.getElementById("totalServicios").textContent = total.toFixed(2);
+
+    if (seleccionados.length === 0) {
+      document.getElementById("tablaServicios").style.display = "none";
+    }
+
+    actualizarCampoOculto();
+  }
+
+  function actualizarCampoOculto() {
+    document.getElementById("serviciosSeleccionados").value = seleccionados.join(",");
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
